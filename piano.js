@@ -8,6 +8,7 @@ dims.sharp = {
     height: dims.height * 2. / 3.,
     depth: dims.depth * 1. / 7.
 }
+const rotOff = 0.05;
 
 const PIANO_BLACK = 0x1C110F;
 const BLACK = 0x000000;
@@ -37,28 +38,53 @@ export function renderPiano(canvas, numOctaves, octaveStart) {
     keys.forEach(key => {scene.add(key);});
 
     keys.forEach(key => {
-        key.press = (duration) => {
-            const rotOff = 0.05;
-            key.rotation.x += rotOff;
+        key.keyDown = keyDown;
+        key.keyUp = keyUp;
+
+        key.timedPress = (duration) => {
+            key.keyDown();
             renderer.render(scene, camera);
             setTimeout(() => {
-                key.rotation.x -= rotOff;
+                key.keyUp();
                 renderer.render(scene, camera);
             }, duration);
         }
-    })
+    });
+
     keys.get = get;
     renderer.render(scene, camera);
 
     return {keys, scene, camera,renderer};
 }
 
-function get(pitch, octave, sign) {
-    const keys = this;
-    if (!sign) sign = "";
-    sign = sign.trim();
-    const id = `${pitch}${octave}${sign}`;
+export function play(piano, note, duration) {
+    let {keys, scene, camera, renderer} = piano;
+    note = note.toLowerCase();
+    keys.get(note).timedPress(duration);
+}
 
+export function demoPlay(piano) {
+    let {keys} = piano;
+    var i = 0;
+    return setInterval(() => {
+        play(piano, keys[i].pitch, 250);
+        i = (i+1) % keys.length;
+    }, 1000);
+}
+
+
+
+function keyDown() {
+    const key = this;
+    key.rotation.x += rotOff;
+}
+function keyUp() {
+    const key = this;
+    key.rotation.x -= rotOff;
+}
+
+function get(id) { // "a#3"
+    const keys = this;
     for (let i = 0; i < keys.length; ++i) {
         const key = keys[i];
         if (id === key.pitch || id === key.altPitch) return key;
@@ -68,7 +94,7 @@ function get(pitch, octave, sign) {
 }
 
 
-const letters = ["A", "B", "C", "D", "E", "F", "G", "A"];
+const letters = ["a", "b", "c", "d", "e", "f", "g", "a"];
 
 const sharpIndices = [
     1, //A-sharp/B-flat
@@ -77,10 +103,6 @@ const sharpIndices = [
     6, //F-sharp/G-flat
     7, //G-sharp/A-flat
 ];
-
-
-
-
 
 function keyboard(startX, numOctaves, octaveStart) {
     let {gap} = dims;
@@ -121,12 +143,9 @@ function octave(startX, fullEight, octaveNo) {
         k.position.y += (dims.height - dims.sharp.height) / 2;
         k.position.z += dims.depth / 2; //FIXME: Hardcoding
 
-        if (letters[ind] === "A")
-            k.pitch = `${letters[ind]}${octaveNo + 1}b`;
-        else
-            k.pitch = `${letters[ind]}${octaveNo}b`;
-
-        k.altPitch = `${letters[ind - 1]}${octaveNo}#`;
+        if (letters[ind] === "a") k.pitch = toId(letters[ind], octaveNo+1, "b");
+        else                      k.pitch = toId(letters[ind], octaveNo, "b" );
+        k.altPitch = toId(letters[ind-1], octaveNo, "#");
 
         keys.push(k);
     }
@@ -137,6 +156,11 @@ function octave(startX, fullEight, octaveNo) {
 
     let octWidth = numWhite*width + (numWhite-1)*gap;
     return {keys, width:octWidth};
+}
+
+function toId(pitch, octave, sign) {
+    if (sign === undefined) sign = "";
+    return `${pitch}${sign}${octave}`;
 }
 
 
