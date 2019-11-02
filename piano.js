@@ -10,10 +10,14 @@ dims.sharp = {
 }
 const rotOff = 0.05;
 
-const PIANO_BLACK = 0x1C110F;
+//Named Color constants (for convenience)
+const TEAL = 0x008080;
 const BLACK = 0x000000;
+const PIANO_BLACK = 0x1C110F;
 const WHITE = 0xFFFFFF;
 const BROWN = 0x654321;
+
+const KEYDOWN_COLOR = TEAL;
 
 export function renderPiano(canvas, numOctaves, octaveStart) {
     if (numOctaves === undefined) numOctaves = 3;
@@ -76,10 +80,13 @@ export function demoPlay(piano) {
 function keyDown() {
     const key = this;
     key.rotation.x += rotOff;
+    key.prevColor = key.material.color.getHex();;
+    key.material.color.setHex(KEYDOWN_COLOR);
 }
 function keyUp() {
     const key = this;
     key.rotation.x -= rotOff;
+    key.material.color.setHex(key.prevColor);
 }
 
 function get(id) { // "a#3"
