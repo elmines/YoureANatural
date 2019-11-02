@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Learning Music</title>
+    <title>&#9838;</title>
 
     <link href="https://fonts.googleapis.com/css?family=Staatliches&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./app.css">
@@ -27,32 +27,34 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
     <script src="./lennon.js"></script>
     <div id="app">
+        <!-- <transition name="fade"> -->
         <div class="credit">
-            Created at Vandy Hacks VI | Ethan Mines | Russell Weas | Caroline Austin | Jace Aldrich
+            <a href="https://vandyhacks.org" target="_blank">Vandy Hacks VI</a> | Ethan Mines | Russell Weas | Caroline Austin | Jace Aldrich
         </div>
-        <div class="Aligner">
-            <div class="Aligner-center">
-                <div class="header">
-                    <img src="./img/Natural_sign.svg" class="logo">
-                    <div class="title-one">Don't worry. You've got this.</div>
-                    <div class="title-two">You're a Natural.</div>
-                    <div class="title-three">Begin my musical journey...</div>
-                </div>
+        <!-- <div class="Aligner-center"> -->
+        <div class="header" v-show="stage==0">
+            <img src="./img/Natural_sign.svg" class="logo">
+            <div class="title-one">Don't worry. You've got this.</div>
+            <div class="title-two">You're a Natural.</div>
+            <div class="title-three" @click="begin()">Begin my musical journey...</div>
+        </div>
+        <!-- </div> -->
+        <div v-show="stage==1" style="text-align: center">
+            <div class="title-four">
+                <span>You're a &#9838;</span>
+            </div> <br>
+            <button @click="test" v-show="loaded">Play the music!</button>
+            <button @click="stop" v-show="loaded">Stop the music!</button>
+            <textarea v-model="songEncoded" cols="30" rows="10"></textarea>
+            <br>
+            <div style="text-align: center;">
+                <canvas id="piano" width="1000" height="250"></canvas>
             </div>
         </div>
-
-        <h3 v-show="!loaded">The app is loading...</h3>
-        <button @click="test" v-show="loaded">Play the music!</button>
-        <button @click="stop" v-show="loaded">Stop the music!</button>
-        <textarea v-model="songEncoded" cols="30" rows="10"></textarea>
-        <div>
-            {{ song }}
-        </div>
-        <canvas id="piano" width="1000" height="250"></canvas>
-
+        <!-- </transition> -->
     </div>
     <script type="module">
-        import { demoPlay, renderPiano, play } from "./piano.js"; const canvas = document.querySelector("#piano"); window.piano = renderPiano(canvas); window.play = play;
+        import { demoPlay, renderPiano, play } from "./piano.js"; window.renderPiano = renderPiano; window.play = play;
     </script>
     <script>
         // const canvas = document.querySelector("#piano");
@@ -71,13 +73,21 @@
                 },
                 stop: function() {
                     this.part.stop()
+                },
+                begin: function() {
+                    const canvas = document.querySelector("#piano");
+                    window.piano = window.renderPiano(canvas);
+                    // window.play = play;
+                    this.stage = 1;
+                    console.log('im trying')
                 }
             },
             data() {
                 return {
                     loaded: false,
                     songEncoded: `0:0:0 e4 4n\n0:1 e4 4n\n0:2 e4 4n\n0:3 c4 8n\n0:3:2 g4 8N\n1:0 e4 4n\n1:1 c4 8n\n1:1:2 g4 8n\n1:2 e4 2n\n2:0 b4 4n\n2:1 b4 4n\n2:2 b4 4n \n2:3 c5 8n\n2:3:2 g4 8n\n3:0 e4 4n\n3:1 c4 8n\n3:1:2 g4 8n\n3:2 e4 2n`,
-                    part: {}
+                    part: {},
+                    stage: 0
                 }
             },
             computed: {
@@ -103,7 +113,7 @@
                     that.part = new Tone.Part(function(time, value) {
                         var z = Tone.Time(value.length);
                         console.log(`Playing ${value.note} for ${z.toMilliseconds()} ms.`);
-                        window.play(window.piano, value.note, z.toMilliseconds())
+                        window.play(window.piano, value.note, z.toMilliseconds() * .8)
                         piano.triggerAttackRelease(value.note, value.length, time);
                     }, that.song)
                     that.part.humanize = true
