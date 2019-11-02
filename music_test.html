@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Learning Music</title>
+</head>
+
+<body>
+    <script src="https://tonejs.github.io/build/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+    <script src="./lennon.js"></script>
+    <div id="app">
+        <h1>Welcome to the piano app!</h1>
+        <h3 v-show="!loaded">The app is loading...</h3>
+        <button @click="test" v-show="loaded">Play the music!</button>
+        <button @click="stop" v-show="loaded">Stop the music!</button>
+        <textarea v-model="songEncoded" cols="30" rows="10"></textarea>
+        <div>
+            {{ song }}
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: "#app",
+            methods: {
+                test: function () {
+                    this.part.stop()
+                    this.part.removeAll();
+                    this.song.forEach(z => {
+                        this.part.add(z);
+                    });
+                    this.part.start("+0");
+                    Tone.Transport.start("+0");
+                },
+                stop: function () {
+                    this.part.stop()
+                }
+            },
+            data() {
+                return {
+                    loaded: false,
+                    songEncoded: `0:0:0 e4 4n\n0:1 e4 4n\n0:2 e4 4n\n0:3 c4 8n\n0:3:2 G4 8N\n1:0 e4 4n\n1:1 c4 8n\n1:1:2 g4 8n\n1:2 e4 2n\n2:0 b4 4n\n2:1 b4 4n\n2:2 b4 4n \n2:3 c5 8n\n2:3:2 g4 8n\n3:0 e4 4n\n3:1 c4 8n\n3:1:2 g4 8n\n3:2 e4 2n`,
+                    part: {}
+                }
+            },
+            computed: {
+                song: function () {
+                    var x = this.songEncoded.split("\n");
+                    var z = []
+                    x.forEach(y => {
+                        a = y.split(' ');
+                        z.push({
+                            "time": a[0],
+                            "note": a[1],
+                            "length": a[2]
+                        })
+                    });
+                    return z
+                }
+            },
+            mounted: function () {
+                var tempo = 120;
+                var timeInMs = 1;
+                that = this
+                setup().then(piano => {
+                    that.part = new Tone.Part(function (time, value) {
+                        console.log(time, value.note);
+                        piano.triggerAttackRelease(value.note, value.length, time);
+                    }, that.song)
+                    that.part.humanize = true
+                    that.loaded = true
+                })
+            }
+        })
+    </script>
+</body>
+
+</html>
