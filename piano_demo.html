@@ -6,13 +6,11 @@
         <canvas id="piano" width="1000" height="250"></canvas>
     </body>
     <script type="module">
-        import * as piano from "./piano.js";
+        import {demoPlay, renderPiano, play} from "./piano.js";
+
         const canvas = document.querySelector("#piano");
-        let {keys} = piano.renderPiano(canvas);
-        var i = 0;
-        setInterval(() => {
-            keys[i].press(250);
-            i = (i+1) % keys.length;
-        }, 1000);
+        let piano = renderPiano(canvas);
+        demoPlay(piano); 
+        
     </script>
 </html>
