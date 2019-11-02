@@ -25,9 +25,8 @@ export function renderPiano(canvas, numOctaves, octaveStart) {
 
     const camera = new THREE.PerspectiveCamera(75);
     camera.position.z = 4.0;
-    const renderer = new THREE.WebGLRenderer({canvas});
+    const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(BLACK);
 
     const light = new THREE.DirectionalLight(WHITE,1.25);
     light.position.set(0, 2, 4);
