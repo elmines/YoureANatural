@@ -1,0 +1,245 @@
+<html>
+	<head>
+        <title>Piano Demo</title>
+        
+    </head>
+        <div id="sheet" onclick="placeNote(event)"></div>
+        <div id="note list" >
+            <div id="notes" class="flex-container">
+                <div id="whole note" ></div>
+                <div id="half note" ></div>
+                <div id="quarter note" ></div>
+                <div id="eighth note" ></div>
+                <div id="sixteenth note" ></div>
+            </div>
+            <div id="rests">
+                <div id="whole rest" ></div>
+                <div id="half rest" ></div>
+                <div id="quarter rest" ></div>
+                <div id="eighth rest" ></div>
+                <div id="sixteenth rest" ></div>
+            </div>
+        </div>
+        <div id="inputs">
+            
+        </div>
+	<body>
+        <script src ="https://unpkg.com/vexflow@1.2.89/releases/vexflow-debug.js"></script>
+        <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+        <style>
+
+        .draggable {
+            touch-action: none;
+            user-select: none;
+        }
+        .flex-container {
+            display: flex;
+            flex-direction: row;
+        }
+        .note-list {
+            margin-top: none;
+        }
+
+        
+        </style>
+		<script>
+
+
+            //dragging
+            const position = { x: 0, y: 0 }
+            interact('.draggable').draggable({
+            listeners: {
+                start (event) {
+                console.log(event.type, event.target)
+                },
+                move (event) {
+                position.x += event.dx
+                position.y += event.dy
+
+                event.target.style.transform =
+                    `translate(${position.x}px, ${position.y}px)`
+                },
+            }
+            })
+
+
+            function generateNoteList(){
+                var div = document.getElementById("whole note");
+                div.innerHTML = null;
+                var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+                // Configure the rendering context.
+                renderer.resize(100, 100);
+                var context = renderer.getContext();
+                context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+                this.voice = new VF.Voice({num_beats: 4,  beat_value: 4});
+                var notes = [
+                    new VF.StaveNote({clef: "treble", keys: ["g/5"], duration: "1" }),
+                ];
+                this.voice.addTickables(notes);
+                var formatter = new VF.Formatter().joinVoices([this.voice]).format([this.voice], 100);
+                this.voice.draw(context, stave);
+
+
+                var div = document.getElementById("half note");
+                div.innerHTML = null;
+                var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+                // Configure the rendering context.
+                renderer.resize(100, 100);
+                var context = renderer.getContext();
+                context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+                this.voice = new VF.Voice({num_beats: 2,  beat_value: 4});
+                var notes = [
+                    new VF.StaveNote({clef: "treble", keys: ["g/5"], duration: "2" }),
+                ];
+                this.voice.addTickables(notes);
+                var formatter = new VF.Formatter().joinVoices([this.voice]).format([this.voice], 100);
+                this.voice.draw(context, stave);
+
+
+                var div = document.getElementById("quarter note");
+                div.innerHTML = null;
+                var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+                // Configure the rendering context.
+                renderer.resize(100, 100);
+                var context = renderer.getContext();
+                context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+                this.voice = new VF.Voice({num_beats: 1,  beat_value: 4});
+                var notes = [
+                    new VF.StaveNote({clef: "treble", keys: ["g/5"], duration: "4" }),
+                ];
+                this.voice.addTickables(notes);
+                var formatter = new VF.Formatter().joinVoices([this.voice]).format([this.voice], 100);
+                this.voice.draw(context, stave);
+
+
+                var div = document.getElementById("eighth note");
+                div.innerHTML = null;
+                var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+                // Configure the rendering context.
+                renderer.resize(100, 120);
+                var context = renderer.getContext();
+                context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+                this.voice = new VF.Voice({num_beats: 1,  beat_value: 8});
+                var notes = [
+                    new VF.StaveNote({clef: "treble", keys: ["g/5"], duration: "8" }),
+                ];
+                this.voice.addTickables(notes);
+                var formatter = new VF.Formatter().joinVoices([this.voice]).format([this.voice], 100);
+                this.voice.draw(context, stave);
+
+
+                var div = document.getElementById("sixteenth note");
+                div.innerHTML = null;
+                var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+                // Configure the rendering context.
+                renderer.resize(100, 120);
+                var context = renderer.getContext();
+                context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+                this.voice = new VF.Voice({num_beats: 1,  beat_value: 16});
+                var notes = [
+                    new VF.StaveNote({clef: "treble", keys: ["g/5"], duration: "16" }),
+                ];
+                this.voice.addTickables(notes);
+                var formatter = new VF.Formatter().joinVoices([this.voice]).format([this.voice], 100);
+                this.voice.draw(context, stave);
+            }
+
+            //Object Definitions
+            var Sheet = function(beatsPerMinute, beatsPerMeasure, noteWeight, x, y, width){
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = 100;
+                this.clef = "treble"
+                this.beatsPerMinute = beatsPerMinute;
+                this.BeatsPerMeasure = beatsPerMeasure;
+                this.noteWeight = parseInt(noteWeight);
+                this.numMeaures = 1;
+                this.numNotes = 0;
+                this.numBeats = 0;
+                this.notes = [];
+                
+                this.addNote = function(key, duration){
+                    var dur;
+                    console.log(duration);
+                    if(duration.includes("r")){
+                        dur = parseInt(duration.substring(0, duration.length));
+                        console.log("here");
+                    }else{
+                        dur = parseInt(duration)
+                    }
+                    console.log(this.noteweight);
+                    this.numBeats += (this.noteWeight/dur);
+                     if(this.numBeats > (this.BeatsPerMeasure*this.numMeaures)){
+                         this.numMeasures += 1;
+                         this.addMeasure();
+                     }
+                    var note = new VF.StaveNote({clef: this.clef, keys: [key], duration: dur });
+                    this.notes.push(note);
+                    var div = document.getElementById("sheet");
+                    div.innerHTML = null;
+                    var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+                    // Configure the rendering context.
+                    renderer.resize(this.width, this.height);
+                    var context = renderer.getContext();
+                    context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+                    this.voice = new VF.Voice({num_beats: this.numBeats,  beat_value: this.noteWeight});
+                    this.voice.addTickables(this.notes);
+                    console.log("Creating Note:" + key);
+                    console.log(this.notes.length);
+                    var formatter = new VF.Formatter().joinVoices([this.voice]).format([this.voice], this.width);
+                    stave.setContext(context).draw();
+                    this.voice.draw(context, stave);
+                }
+                this.addMeasure =function(){
+                    this.numMeaures += 1;
+                    var measure = new VF.BarNote();
+                    this.notes.push(measure);
+                }
+            }
+            function placeNote(event){
+                console.log(event);
+            }
+
+            //initalize sheet
+            VF = Vex.Flow;
+
+            // Create a stave of width 800 at position 10, 40 on the canvas.
+            var stave = new VF.Stave(0, 0, 800);
+
+
+            /************Start of Dynamic Code***************/
+            var sheet = new Sheet(120, 4, 4, 0, 0, 800);
+            var div = document.getElementById("sheet");
+            var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+            // Configure the rendering context.
+            renderer.resize(sheet.width, sheet.height);
+            var context = renderer.getContext();
+            context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+            var timeSigniture = sheet.BeatsPerMeasure.toString().concat("/").concat(sheet.noteWeight.toString());
+
+            // Add a clef and time signature.
+            stave.addClef(sheet.clef).addTimeSignature(timeSigniture);
+
+            // Connect it to the rendering context and draw!
+            stave.setContext(context).draw();
+            // Connect it to the rendering context and draw!
+            stave.setContext(context).draw();
+            generateNoteList();
+            sheet.addNote("c/4", "4");
+            // sheet.addNote("c/4", "4");
+            // sheet.addNote("a/5", "2");
+            // sheet.addNote("c/4", "4");
+            // sheet.addNote("c/4", "4");
+            // sheet.addNote("c/4", "2");
+            // sheet.addNote("c/4", "4");
+            console.log(sheet);
+
+        </script>
