@@ -165,21 +165,17 @@
                 this.notes = [];
                 
                 this.addNote = function(key, duration){
-                    var dur;
-                    console.log(duration);
+                    
                     if(duration.includes("r")){
-                        dur = parseInt(duration.substring(0, duration.length));
-                        console.log("here");
-                    }else{
-                        dur = parseInt(duration)
+                        key = "b/4"
                     }
-                    console.log(this.noteweight);
-                    this.numBeats += (this.noteWeight/dur);
-                     if(this.numBeats > (this.BeatsPerMeasure*this.numMeaures)){
-                         this.numMeasures += 1;
-                         this.addMeasure();
-                     }
-                    var note = new VF.StaveNote({clef: this.clef, keys: [key], duration: dur });
+                    this.numBeats += (parseInt(this.noteWeight)/parseInt(duration));
+                    if(this.numBeats > (this.BeatsPerMeasure*this.numMeaures)){
+                        this.numMeasures += 1;
+                        this.addMeasure();
+                    }
+                    var note = new VF.StaveNote({clef: this.clef, keys: [key], duration: duration });
+                    console.log(note);
                     this.notes.push(note);
                     var div = document.getElementById("sheet");
                     div.innerHTML = null;
@@ -233,7 +229,7 @@
             // Connect it to the rendering context and draw!
             stave.setContext(context).draw();
             generateNoteList();
-            sheet.addNote("c/4", "4");
+            sheet.addNote("B/4", "4");
             // sheet.addNote("c/4", "4");
             // sheet.addNote("a/5", "2");
             // sheet.addNote("c/4", "4");
