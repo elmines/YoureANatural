@@ -6,18 +6,18 @@
         <div id="sheet" onclick="placeNote(event)"></div>
         <div id="note list" >
             <div id="notes" class="flex-container">
-                <div id="whole note" class="note-selection" onclick="return selectNote("></div>
-                <div id="half note" class="note-selection"></div>
-                <div id="quarter note" class="note-selection"></div>
-                <div id="eighth note" class="note-selection"></div>
-                <div id="sixteenth note" class="note-selection"></div>
+                <div id="1" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="2" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="4" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="8" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="16" class="note-selection" onclick="return selectNote(this)"></div>
             </div>
             <div id="rests" class="flex-container">
-                <div id="whole rest" class="note-selection"></div>
-                <div id="half rest" class="note-selection"></div>
-                <div id="quarter rest" class="note-selection"></div>
-                <div id="eighth rest" class="note-selection"></div>
-                <div id="sixteenth rest" class="note-selection"></div>
+                <div id="1r" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="2r" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="4r" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="8r" class="note-selection" onclick="return selectNote(this)"></div>
+                <div id="16r" class="note-selection" onclick="return selectNote(this)"></div>
             </div>
         </div>
         <div id="inputs">
@@ -26,6 +26,11 @@
 	<body>
         <script src ="https://unpkg.com/vexflow@1.2.89/releases/vexflow-debug.js"></script>
         <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+        <script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
         <style>
 
         .draggable {
@@ -42,10 +47,20 @@
         .note-selection:hover{
             zoom: 1.5;
         }
+        .selected-note{
+            zoom: 1.5;
+        }
         
         </style>
 		<script>
 
+            function selectNote(div){
+                var noteName = div.id;
+                $('.selected-note').removeClass('selected-note');
+                $('#' + noteName).addClass("selected-note");
+                console.log("selected: " + noteName);
+                sheet.showNote("b/4", noteName);
+            }
 
             //dragging
             const position = { x: 0, y: 0 }
@@ -66,7 +81,7 @@
 
 
             function generateNoteList(){
-                var div = document.getElementById("whole note");
+                var div = document.getElementById("1");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -83,7 +98,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("half note");
+                var div = document.getElementById("2");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -100,7 +115,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("quarter note");
+                var div = document.getElementById("4");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -117,7 +132,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("eighth note");
+                var div = document.getElementById("8");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -134,7 +149,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("sixteenth note");
+                var div = document.getElementById("16");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -152,7 +167,7 @@
 
 
                 //rests
-                var div = document.getElementById("whole rest");
+                var div = document.getElementById("1r");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -169,7 +184,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("half rest");
+                var div = document.getElementById("2r");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -186,7 +201,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("quarter rest");
+                var div = document.getElementById("4r");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -203,7 +218,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("eighth rest");
+                var div = document.getElementById("8r");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -220,7 +235,7 @@
                 this.voice.draw(context, stave);
 
 
-                var div = document.getElementById("sixteenth rest");
+                var div = document.getElementById("16r");
                 div.innerHTML = null;
                 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -251,6 +266,45 @@
                 this.numNotes = 0;
                 this.numBeats = 0;
                 this.notes = [];
+
+                this.showNote = function(key, duration){
+                    if(duration.includes("r")){
+                        key = "b/4"
+                    }
+                    this.numBeats += (parseInt(this.noteWeight)/parseInt(duration));
+                    if(this.numBeats > (this.BeatsPerMeasure*this.numMeaures)){
+                        this.numMeasures += 1;
+                        this.addMeasure();
+                    }
+                    var note = new VF.StaveNote({clef: this.clef, keys: [key], duration: duration });
+                    console.log(note);
+                    this.notes.push(note);
+                    var div = document.getElementById("sheet");
+                    div.innerHTML = null;
+                    var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+                    // Configure the rendering context.
+                    renderer.resize(this.width, this.height);
+                    var context = renderer.getContext();
+                    context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+                    this.voice = new VF.Voice({num_beats: this.numBeats,  beat_value: this.noteWeight});
+                    this.voice.addTickables(this.notes);
+                    console.log("Creating Note:" + key);
+                    console.log(this.notes.length);
+                    var formatter = new VF.Formatter().joinVoices([this.voice]).format([this.voice], this.width);
+                    stave.setContext(context).draw();
+                    this.voice.draw(context, stave);
+                    
+
+                    //cleanup
+                    this.notes.pop();
+                    if(this.numBeats > (this.BeatsPerMeasure*this.numMeaures)){
+                        this.numMeasures -= 1;
+                        notes.pop();
+                    }
+                    this.numBeats -= (parseInt(this.noteWeight)/parseInt(duration));
+                    console.log(notes);
+                }
                 
                 this.addNote = function(key, duration){
                     
@@ -317,14 +371,14 @@
             // Connect it to the rendering context and draw!
             stave.setContext(context).draw();
             generateNoteList();
-            sheet.addNote("B/4", "4");
-            sheet.addNote("c/4", "4");
-            sheet.addNote("a/5", "2");
-            sheet.addNote("c/4", "4");
-            sheet.addNote("c/4", "4");
-            sheet.addNote("c/4", "2");
-            //sheet.notes[1].setStyle({ fillStyle: 'orange', strokeStyle: 'orange' });
-            sheet.addNote("c/4", "4");
+            // sheet.addNote("B/4", "4");
+            // sheet.addNote("c/4", "4");
+            // sheet.addNote("a/5", "2");
+            // sheet.addNote("c/4", "4");
+            // sheet.addNote("c/4", "4");
+            // sheet.addNote("c/4", "2");
+            // //sheet.notes[1].setStyle({ fillStyle: 'orange', strokeStyle: 'orange' });
+            // sheet.addNote("c/4", "4");
             console.log(sheet);
 
         </script>
