@@ -11,6 +11,9 @@
                 <div id="4" class="note-selection" onclick="return selectNote(this)"></div>
                 <div id="8" class="note-selection" onclick="return selectNote(this)"></div>
                 <div id="16" class="note-selection" onclick="return selectNote(this)"></div>
+                <button name="confirm-note" onclick="return confirmNote()">Confirm</button>
+                <button name="pitch-up" onclick="return pitchChange('up')">up</button>
+                <button name="pitch-down" onclick="return pitchChange('down')">down</button>
             </div>
             <div id="rests" class="flex-container">
                 <div id="1r" class="note-selection" onclick="return selectNote(this)"></div>
@@ -54,12 +57,31 @@
         </style>
 		<script>
 
+            function confirmNote(){
+                var duration = $('.selected-note').attr("id");
+                console.log("duration is: " + duration);
+                sheet.addNote(sheet.notePosition, duration);
+            }
+
+            function pitchChange(direction){
+                var duration = $('.selected-note').attr("id");
+                console.log(duration);
+                if(direction == "up"){
+                   sheet.keyUp();
+                }
+                else if(direction == "down"){
+                    sheet.keyDown();
+                }
+                sheet.showNote(duration);
+                
+            }
+
             function selectNote(div){
                 var noteName = div.id;
                 $('.selected-note').removeClass('selected-note');
                 $('#' + noteName).addClass("selected-note");
                 console.log("selected: " + noteName);
-                sheet.showNote("b/4", noteName);
+                sheet.showNote(noteName);
             }
 
             //dragging
@@ -266,8 +288,67 @@
                 this.numNotes = 0;
                 this.numBeats = 0;
                 this.notes = [];
+                this.notePosition = "b/4"
 
-                this.showNote = function(key, duration){
+                this.keyUp = function(){
+                    var letter = this.notePosition.substring(0,1);
+                    var octave = this.notePosition.substring(2,3);
+                    console.log("octave: " + octave);
+                    switch(letter){
+                        case "g":
+                            this.notePosition = "a/" + octave;
+                            break;
+                        case "f":
+                            this.notePosition = "g/" + (octave);
+                            break;
+                        case "e":
+                            this.notePosition = "f/" + (octave);
+                            break;
+                        case "d":
+                            this.notePosition = "e/" + (octave);
+                            break;
+                        case "c":
+                            this.notePosition = "d/" + (octave);
+                            break;
+                        case "b":
+                            this.notePosition = "c/" + (parseInt(octave) + 1).toString();
+                            break;
+                        case "a":
+                            this.notePosition = "b/" + (octave);
+                            break;
+                    }
+                }
+
+                this.keyDown = function(){
+                    var letter = this.notePosition.substring(0,1);
+                    var octave = this.notePosition.substring(2,3);
+                    switch(letter){
+                        case "g":
+                            this.notePosition = "f/" + octave; //(parseInt(octave) - 1).toString();//(octave);
+                            break;
+                        case "f":
+                            this.notePosition = "e/" + (octave);
+                            break;
+                        case "e":
+                            this.notePosition = "d/" + (octave);
+                            break;
+                        case "d":
+                            this.notePosition = "c/" + (octave);
+                            break;
+                        case "c":
+                            this.notePosition = "b/" + (parseInt(octave) - 1).toString();
+                            break;
+                        case "b":
+                            this.notePosition = "a/" + (octave);
+                            break;
+                        case "a":
+                            this.notePosition = "g/" + octave; //(parseInt(octave) - 1).toString();
+                            break;
+                    }
+                }
+
+                this.showNote = function(duration){
+                    var key = this.notePosition;
                     if(duration.includes("r")){
                         key = "b/4"
                     }
@@ -276,8 +357,10 @@
                         this.numMeasures += 1;
                         this.addMeasure();
                     }
+                    // console.log("key: " +key);
+                    // console.log("duration: " + duration);
                     var note = new VF.StaveNote({clef: this.clef, keys: [key], duration: duration });
-                    console.log(note);
+
                     this.notes.push(note);
                     var div = document.getElementById("sheet");
                     div.innerHTML = null;
