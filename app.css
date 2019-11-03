@@ -10,6 +10,13 @@
     font-family: Staatliches;
     padding: 1rem;
     font-size: 1rem;
+    /* float: left; */
+}
+
+.main {
+    font-family: Staatliches;
+    padding: 1rem;
+    font-size: 1rem;
 }
 
 .title-two {
@@ -32,7 +39,7 @@
 }
 
 .logo {
-    margin-bottom: 5rem;
+    font-size: 2rem;
 }
 
 .title-four {

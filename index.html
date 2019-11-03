@@ -28,8 +28,10 @@
     <div id="app">
         <!-- <transition name="fade"> -->
         <div class="credit">
-            <a href="https://vandyhacks.org" target="_blank">Vandy Hacks VI</a> | Ethan Mines | Russell Weas | Caroline Austin | Jace Aldrich
+            <a href="https://vandyhacks.org" target="_blank"><img src="./img/vandy_hacks.png" class="inline-block" alt="" style="height:3rem; margin-right:10px;"></a>
+            Ethan Mines &nbsp; &#9838; &nbsp; Russell Weas &nbsp; &#9838; &nbsp; Caroline Austin &nbsp; &#9838; &nbsp; <a href="https://www.linkedin.com/in/jbaldrich" target="_blank">Jace Aldrich</a> &nbsp; &#9838; &nbsp; About This Project
         </div>
+
         <!-- <div class="Aligner-center"> -->
         <div class="header" v-show="stage==0">
             <div class="text-center title-one">&#9838;</div>
@@ -39,8 +41,9 @@
         </div>
         <div v-show="stage==1" style="text-align: center;">
             <div class="container">
+                <div class="title-two">Module One: Navigating Sheet Music</div>
+
                 <div v-show="page==0">
-                    <div class="title-two">Module One: Navigating Sheet Music</div>
                     <p>For this lesson, we'll go over sheet music notation, so you're up to speed when we start working with the staff in later lessons.</p>
                     <br>
                     <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" @click="page = 1">Let's
