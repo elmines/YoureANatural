@@ -2,7 +2,7 @@
     font-family: Staatliches;
     text-align: center;
     font-size: 3rem;
-    padding-top: 10rem;
+    padding-top: 2rem;
 }
 
 .credit {
@@ -24,11 +24,11 @@
     text-decoration: underline;
     padding-top: 4rem;
     cursor: pointer;
-    transition: font-size 1s;
+    transition: font-size 0.4s;
 }
 
 .title-three:hover {
-    font-size: 4.1rem;
+    font-size: 3.4rem;
 }
 
 .logo {
@@ -117,4 +117,45 @@ html {
 {
     transform: translateX(10px);
     opacity: 0;
+}
+
+.container {
+    width: 80%;
+    text-align: center;
+    margin-left: 10%;
+}
+
+.container .title-one {
+    font-family: Staatliches;
+    text-align: center;
+    font-size: 3rem;
+    padding-top: 5%;
+}
+
+.container p {
+    font-family: Staatliches;
+    font-size: 1.4rem;
+}
+
+.timeline {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #FBFBE3;
+    padding: 15px;
+    /* overflow-y: none; */
+    white-space: nowrap;
+    overflow-x: scroll;
+    max-height: 10rem;
+}
+
+.timeline div {
+    white-space: normal;
+}
+
+canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    width: 800px;
 }

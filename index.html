@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>&#9838;</title>
-
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Staatliches&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./app.css">
 </head>
 
 <body>
-    <a href="https://github.com/elmines/YoureANatural" class="github-corner" aria-label="View source on GitHub"><svg
-            width="80" height="80" viewBox="0 0 250 250"
+    <a href="https://github.com/elmines/YoureANatural" class="github-corner" aria-label="View source on GitHub" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250"
             style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
             <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
             <path
@@ -33,22 +32,134 @@
         </div>
         <!-- <div class="Aligner-center"> -->
         <div class="header" v-show="stage==0">
-            <img src="./img/Natural_sign.svg" class="logo">
+            <div class="text-center title-one">&#9838;</div>
             <div class="title-one">Don't worry. You've got this.</div>
             <div class="title-two">You're a Natural.</div>
-            <div class="title-three" @click="begin()">Begin my musical journey...</div>
+            <div class="title-three" @click="stage=1">Begin my musical journey...</div>
+        </div>
+        <div v-show="stage==1" style="text-align: center;">
+            <div class="container">
+                <div v-show="page==0">
+                    <div class="title-two">Module One: Navigating Sheet Music</div>
+                    <p>For this lesson, we'll go over sheet music notation, so you're up to speed when we start working with the staff in later lessons.</p>
+                    <br>
+                    <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" @click="page = 1">Let's
+                        get started.</button>
+                </div>
+                <div v-show="page==1">
+                    <p>Staff: 5 lines and 4 spaces on which most of the notes are located. As we will learn later a note’s location on the staff indicates the pitch to be played</p>
+                    <p>Clef This is a treble clef. The clef sign tells the musician how to interpret the note’s location on the staff.
+                    </p>
+                    </p>
+                    <p>
+                        Measure A measure is a time segment made up of a specific number of beats defined at the beginning of a piece of music. Measures are separated by vertical bars in the music End bar This signals the end of a piece of music
+                    </p>
+                    <p>
+                        Time Signature This specifies the properties of a measure of music. The top number specifies the number of beats in a measure. The bottom number specifies which note is given the full value of a beat. For example in 3/4 time there are 3 beats per measure
+                        and the quarter not (¼) is takes up a full beat.
+                    </p>
+                    <p>Key Signature This tell the musician which “value” of the note should be assumed throughout the entire piece. You will learn more about key signatures in module 4.
+                    </p>
+                </div>
+
+
+            </div>
+        </div>
+        <div v-show="stage==2" style="text-align: center;">
+            <div class="container">
+                <div class="title-two">Module Two: Basic Pitches and Notes</div>
+
+
+            </div>
+        </div>
+        <div v-show="stage==3" style="text-align: center;">
+            <div class="container">
+                <div class="title-two">Module Three: Major and Minor Scales</div>
+                <p>Staff: 5 lines and 4 spaces on which most of the notes are located. As we will learn later a note’s location on the staff indicates the pitch to be played
+                </p>
+                <p>Clef This is a treble clef. The clef sign tells the musician how to interpret the note’s location on the staff.
+                </p>
+                </p>
+                <p>
+                    Measure A measure is a time segment made up of a specific number of beats defined at the beginning of a piece of music. Measures are separated by vertical bars in the music End bar This signals the end of a piece of music
+                </p>
+                <p>
+                    Time Signature This specifies the properties of a measure of music. The top number specifies the number of beats in a measure. The bottom number specifies which note is given the full value of a beat. For example in 3/4 time there are 3 beats per measure
+                    and the quarter not (¼) is takes up a full beat.
+                </p>
+                <p>Key Signature This tell the musician which “value” of the note should be assumed throughout the entire piece. You will learn more about key signatures in module 4.
+                </p>
+            </div>
+        </div>
+        <div v-show="stage==4" style="text-align: center;">
+            <div class="container">
+                <div class="title-two">Module Four: Major and Minor Scales</div>
+                <p>Staff: 5 lines and 4 spaces on which most of the notes are located. As we will learn later a note’s location on the staff indicates the pitch to be played
+                </p>
+                <p>Clef This is a treble clef. The clef sign tells the musician how to interpret the note’s location on the staff.
+                </p>
+                </p>
+                <p>
+                    Measure A measure is a time segment made up of a specific number of beats defined at the beginning of a piece of music. Measures are separated by vertical bars in the music End bar This signals the end of a piece of music
+                </p>
+                <p>
+                    Time Signature This specifies the properties of a measure of music. The top number specifies the number of beats in a measure. The bottom number specifies which note is given the full value of a beat. For example in 3/4 time there are 3 beats per measure
+                    and the quarter not (¼) is takes up a full beat.
+                </p>
+                <p>Key Signature This tell the musician which “value” of the note should be assumed throughout the entire piece. You will learn more about key signatures in module 4.
+                </p>
+            </div>
         </div>
         <!-- </div> -->
-        <div v-show="stage==1" style="text-align: center">
-            <div class="title-four">
-                <span>You're a &#9838;</span>
-            </div> <br>
+        <div v-show="stage==2" style="text-align: center">
             <button @click="test" v-show="loaded">Play the music!</button>
             <button @click="stop" v-show="loaded">Stop the music!</button>
-            <textarea v-model="songEncoded" cols="30" rows="10"></textarea>
+            <textarea v-model="songEncoded" cols="30" rows="1"></textarea>
             <br>
             <div style="text-align: center;">
                 <canvas id="piano" width="1000" height="250"></canvas>
+            </div>
+        </div>
+        <div class="timeline max-h-xs" v-show="stage!=0">
+            <div class="max-w-xs rounded overflow-hidden shadow-lg inline-block" style="background: #BDD3D4; cursor: pointer;" @click="stage=0">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">0 You're a Natural</div>
+                    <p class="text-gray-700 text-base">
+                        Welcome to You're a Natural! This serves as our project's homepage.
+                    </p>
+                </div>
+            </div>
+            <div class="max-w-xs rounded overflow-hidden shadow-lg inline-block" style="background: #BDD3D4; cursor: pointer;" @click="stage=1">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">1 Navigating Sheet Music</div>
+                    <p class="text-gray-700 text-base">
+                        In this lesson, we learn the basics of musical notation.
+                    </p>
+                </div>
+            </div>
+            <div class="max-w-xs rounded overflow-hidden shadow-lg inline-block" style="background: #BDD3D4; cursor: pointer;" @click="stage=2">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">2 Basic Pitches and Notes</div>
+                    <p class="text-gray-700 text-base">
+                        We learn basic pitches, notes, and other things here.
+                    </p>
+                </div>
+            </div>
+            <div class="max-w-xs rounded overflow-hidden shadow-lg inline-block" style="background: #BDD3D4; cursor: pointer;" @click="stage=3">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">3 Major and Minor Scales</div>
+                    <p class="text-gray-700 text-base">
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    </p>
+                </div>
+            </div>
+            <div class="max-w-xs rounded overflow-hidden shadow-lg inline-block" style="background: #BDD3D4; cursor: pointer;" @click="stage=4">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">4 Key Signatures</div>
+                    <p class="text-gray-700 text-base">
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    </p>
+                </div>
             </div>
         </div>
         <!-- </transition> -->
@@ -61,6 +172,15 @@
         // let piano = renderPiano(canvas);
         var app = new Vue({
             el: "#app",
+            watch: {
+                stage: function(n, old) {
+                    this.page = 0
+                    if (n == 2) {
+                        // alert('hi there')
+                        this.begin()
+                    }
+                }
+            },
             methods: {
                 test: function() {
                     this.part.stop()
@@ -78,7 +198,7 @@
                     const canvas = document.querySelector("#piano");
                     window.piano = window.renderPiano(canvas);
                     // window.play = play;
-                    this.stage = 1;
+                    // this.stage = 1;
                     console.log('im trying')
                 }
             },
@@ -87,7 +207,8 @@
                     loaded: false,
                     songEncoded: `0:0:0 e4 4n\n0:1 e4 4n\n0:2 e4 4n\n0:3 c4 8n\n0:3:2 g4 8N\n1:0 e4 4n\n1:1 c4 8n\n1:1:2 g4 8n\n1:2 e4 2n\n2:0 b4 4n\n2:1 b4 4n\n2:2 b4 4n \n2:3 c5 8n\n2:3:2 g4 8n\n3:0 e4 4n\n3:1 c4 8n\n3:1:2 g4 8n\n3:2 e4 2n`,
                     part: {},
-                    stage: 0
+                    stage: 4,
+                    page: 0
                 }
             },
             computed: {
@@ -124,4 +245,4 @@
     </script>
 </body>
 
-</html>
+</html>`
